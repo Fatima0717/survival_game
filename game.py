@@ -6,6 +6,8 @@ def show_instructions():
     Commands:
       go [direction]
       get [item]
+      look
+      use [item]
       quit
     """)
 
@@ -16,6 +18,16 @@ def show_status():
     if "item" in rooms[current_room]:
         print(f'You see a {rooms[current_room]["item"]}')
     print('---------------------------')
+
+def describe_room(room):
+    describe = {
+        'Hall': "The hall is grand with a high celling and a large chandelier.",
+        'Kitchen': "The kitchen is messy with pots and pans everywhere.",
+        'Dining Room': "The dining room has a large table set for a feast.",
+        'Garden': "The garden is lush with flowers and a small pond.",
+        'Library': "The library is quiet with walls lined with books.",
+        'Basement': "The basement is dark and musty, filled with old furniture."
+    }
 
 # Define the game rooms
 rooms = {
@@ -36,8 +48,18 @@ rooms = {
     'Garden': {
         'north': 'Dining Room',
         'item': 'treasure'
+    },
+    'Library': {
+        'south': 'Hall',
+        'item': 'map'
+    },
+    'Basement': {
+        'east': 'Hall',
+        'item': 'flashlight'
     }
+
 }
+
 
 # Start the player in the Hall
 current_room = 'Hall'
@@ -57,6 +79,9 @@ while True:
         direction = move[1]
         if direction in rooms[current_room]:
             current_room = rooms[current_room][direction]
+            # Random events
+            if random.choice([True, False]):
+                print("A mysterious wind blows through the room...")
         else:
             print("You can't go that way!")
 
@@ -69,9 +94,23 @@ while True:
         else:
             print(f"Can't get {item}!")
 
-    elif move[0] == 'quit':
-        print("Thanks for playing!")
-        break
+    elif move[0] == 'use':
+        item = move[1]
+        if item in inventory:
+            if item == 'potion':
+                print("You drink the potion and feel refreshed!")
+                inventory.remove(item)
+            elif item == 'map':
+                print("You look at the map and get better sense of the layout.")
+                inventory.remove(item)
+            elif item == 'flashlight':
+                print("You turn on the flashlight and can see better in the dark.")
+                inventory.remove(item)
+            else:
+                print(f"You use the {item}.")
+        else:
+            print("You can")   
+       
 
     if 'treasure' in inventory:
         print("Congratulations! You found the treasure!")
