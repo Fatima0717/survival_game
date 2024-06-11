@@ -94,6 +94,9 @@ while True:
         else:
             print(f"Can't get {item}!")
 
+    elif move[0] == 'look':
+        print(describe_room(current_room))
+
     elif move[0] == 'use':
         item = move[1]
         if item in inventory:
@@ -109,9 +112,12 @@ while True:
             else:
                 print(f"You use the {item}.")
         else:
-            print("You can")   
-       
+            print(f"You don't have a {item} in your inventory.")
 
+    elif move[0] == 'quit':
+        print("Thanks for playing!")
+        break   
+       
     if 'treasure' in inventory:
         print("Congratulations! You found the treasure!")
         break
