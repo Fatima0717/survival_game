@@ -1,3 +1,5 @@
+import random
+
 def show_instructions():
     print("""
     Welcome to the Adventure Game!
@@ -28,12 +30,15 @@ def describe_room(room):
         'Library': "The library is quiet with walls lined with books.",
         'Basement': "The basement is dark and musty, filled with old furniture."
     }
+    return descriptions.get(room, "This place is indescribable.")
 
 # Define the game rooms
 rooms = {
     'Hall': {
         'south': 'Kitchen',
         'east': 'Dining Room',
+        'north': 'Library',
+        'west': 'Basement',
         'item': 'key'
     },
     'Kitchen': {
@@ -60,7 +65,6 @@ rooms = {
 
 }
 
-
 # Start the player in the Hall
 current_room = 'Hall'
 inventory = []
@@ -75,7 +79,13 @@ while True:
     # Get the player's next move
     move = input('>').lower().split()
 
-    if move[0] == 'go':
+    if len(move) == 0:
+        print("Invalid command. Try again.")
+        continue
+
+    command = move[0]
+
+    if command == 'go' and len(move) > 1:
         direction = move[1]
         if direction in rooms[current_room]:
             current_room = rooms[current_room][direction]
@@ -85,7 +95,7 @@ while True:
         else:
             print("You can't go that way!")
 
-    elif move[0] == 'get':
+    elif command == 'get' and len(move) > 1:
         item = move[1]
         if "item" in rooms[current_room] and item == rooms[current_room]['item']:
             inventory.append(item)
@@ -94,10 +104,22 @@ while True:
         else:
             print(f"Can't get {item}!")
 
-    elif move[0] == 'look':
+    elif command == 'look':
         print(describe_room(current_room))
 
-    elif move[0] == 'use':
+    elif command == 'use' and len(move) > 1:
+        item = move[1]
+        if "item" in rooms[current_room] and item == rooms[current_room]['item']:
+            inventory.append(item)
+            print(f'{item} got!')
+            del rooms[current_room]['item']
+        else:
+            print(f"Can't get {item}!")
+
+    elif command == 'look':
+        print(describe_room(current_room))
+    
+    elif command == 'use' and len(move) > 1:
         item = move[1]
         if item in inventory:
             if item == 'potion':
@@ -105,18 +127,17 @@ while True:
                 inventory.remove(item)
             elif item == 'map':
                 print("You look at the map and get better sense of the layout.")
-                inventory.remove(item)
             elif item == 'flashlight':
-                print("You turn on the flashlight and can see better in the dark.")
-                inventory.remove(item)
+                print("You trun on the flashlight and can see better in the dark.")
             else:
-                print(f"You use the {item}.")
-        else:
-            print(f"You don't have a {item} in your inventory.")
+                print(f"You don't have a {item} in your inventory")
 
-    elif move[0] == 'quit':
+    elif command == 'quit':
         print("Thanks for playing!")
-        break   
+        break 
+
+    else:
+        print("Invalid command. Try again.")
        
     if 'treasure' in inventory:
         print("Congratulations! You found the treasure!")
