@@ -115,17 +115,19 @@ while True:
 
     elif command == 'use' and len(move) > 1:
         item = move[1]
-        if item == 'potion':
-            print("You drink the potion and feel refreshed! Yum!")
-            inventory.remove(item)
-        elif item == 'map':
-                print("You look at the map and get a better sense of the layout. very helpful")
-        elif item == 'flashlight':
-                print(f"You turn on the flashlight and can see better sense of the layout. Much better!")
+        if item in inventory:
+        #Humorous responses for using items
+             if item == 'potion':
+                 print("You drink the potion and feel refreshed! Yum!")
+                 inventory.remove(item)
+             elif item == 'map':
+                 print("You look at the map and get a better sense of the layout. very helpful")
+             elif item == 'flashlight':
+                 print(f"You turn on the flashlight and can see better sense of the layout. Much better!")
+             else:
+                 print(f"You can't use the {item} here.")
         else:
-                print(f"You can't use the {item} here.")
-    else:
-        print(f"You don't have a {item} in your inventory.")
+            print(f"You don't have a {item} in your inventory.")
 
     elif command == 'quit':
         print("Thanks for playing! come back soon!")
@@ -135,9 +137,9 @@ while True:
         print("Invalid command. Try again.")
        
     if 'treasure' in inventory:
-        print("Congratulations! You found the treasure!")
+        print("Congratulations! You found the treasure! You're rich!")
         break
 
     if 'monster' in inventory:
-        print("A monster has caught you! Game over!")
+        print("A monster has caught you! Game over! Better luck next time")
         break
