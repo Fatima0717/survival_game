@@ -10,19 +10,21 @@ def show_instructions():
      get [item] - pick up an item
      look - 
      use [item]
+     talk
      quit - Exit the game
     """)
 
 def show_status():
-    print('')
+    print('---------------------------')
     print(f'you are in the {current_room}')
     print(f'Inventory: {inventory})
-    if "item in rooms [current_room]:
-          print(f'You see a [rooms[current_room]["item"]])
-    print('')
+    if "item" in rooms [current_room]:
+          print(f'You see a {rooms[current_room]["item"]})
+    if "character" in rooms[current_room]:
+          print(f'You see {rooms[current_room]["character"]}')
+    print('---------------------------')
 
 def describe_room(room):
-
     descriptions = {
         'Hall': "Hall is shool hoall"
         'Kitchen': "New Kitchen"
@@ -61,7 +63,21 @@ rooms = {
     'Basement': {
         'east': 'Hall',
         'item': 'flashlight'
+    },
+    'Attic': {
+        'down': 'Hall',
+        'item': 'lamp'
+    },
+    'Bathroom': {
+        'item': 'soap',
+    },
+    'Bedroom': {
+        'item': 'lamp'
+    },
+    'Balcony': {
+        'item': 'binoculars'
     }
+
 }
 
 current_room = 'Hall'
@@ -82,7 +98,7 @@ while True:
 
     if command == 'go' and len(move) > 1:
         direction = move[1]
-        if directon in rooms[current_room]:
+        if direction in rooms[current_room]:
             current_room = rooms[current_room][direction]
 
             if random.choice([True, False]):
@@ -104,6 +120,7 @@ while True:
             del rooms[current_room]['item']
         else:
             print(f"can't get {item}!")
+
     elif command == 'look':
         print(describe_room(current_room))
 
@@ -119,8 +136,17 @@ while True:
                 print("You turn on the flashlight")
             else:
                 print(f"You don't have a {item} in your inventory")
+        else:
+            print(f"You don't have a {item} in your inventory.")
+    
+    elif  command == 'talk' and len(move) > 1:
+        character = move[1]
+        if "character" in rooms[current_room] and character in rooms[current_room]['character']
+            print(f'You talk to {rooms[current_room]["charaacter"]}.')
+        else:
+            print(f'There is no {character} here to talk to.')
 
-    elif command == 'quite':
+    elif command == 'quit':
         print("Thank for playing! come back soon!")
         break
     else:
