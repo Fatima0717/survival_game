@@ -1,16 +1,23 @@
 import random
 import time
 
-def show:instructions():
-print("""
-      """)
+def show_instructions():
+    print('---------------------------')
+    print('Welcome to the Adventure Game!\n')
+    print('Instructions:')
+    print("1. Use 'go [direction]' to move (e.g., 'go north').")
+    print("2. Use 'get [item]' to pick up an item.")
+    print("3. Type 'inventory' to see the items you\'ve collected.")
+    print('\nGood luck!')
+    print('---------------------------')
 
 def show_status():
     print('---------------------------')
     print(f'You are at the {current_area}')
-    print(f'Helth: {health}')
+    print(f'Health: {health}')
     print(f'Hunger: {hunger}')
     print(f'Thirst: {thirst}')
+    print(f'Exercise: {workout}')
     print(f'Inventory: {inventory}')
     if "item" in areas[current_area]:
         print(f'You see a {areas[current_area]["item"]}')
@@ -20,13 +27,23 @@ def show_status():
 
 def describe_area(area):
     descriptions = {
-        'Beach': "The beach is beautifull"
-        'Jungle': "The jungle is dense"
-        'cava': "The cave is dark"
-        'Hill': "The hill provides"
-        'River': "The river is flowing"
-        'Clearing': "The clearing is open"
+        'Beach': "The beach is beautiful",
+        'Jungle': "The jungle is a mystery",
+        'Cave': "The cave is dark and blue",
+        'Hill': "The hill provides",
+        'River': "The river is flowing",
+        'Clearing': "The clearing is open",
+        'Jumping': "He is flying"
     }
+    print(descriptions.get(area,"Unknown area"))
+
+def random_events():
+    events = [
+        "You find a hidden path.",
+        "A wild animal appears!",
+        "You stumble upon a treasure chest.",
+        "You feel a sudden drop in temperature.",
+    ]
     print(random.choice(events))
 
 areas = {
@@ -37,26 +54,30 @@ areas = {
     },
     'Jungle': {
         'south': 'Beach',
-        'east': 'Cava',
+        'east': 'Cave',
         'west': 'River',
-        'item': 'fruit'
+        'item': 'Banana'
     },
-    'Cava': {
+    'Cave': {
         'west': 'jungle',
         'item': 'binoculars',
     },
     'Hill': {
         'east': 'Clearing',
-        'item': 'binoculars',
+        'item': 'Golden Sword',
     },
     'River': {
         'east': 'jungle',
-        'item': 'fish',
+        'item': 'fish and chips',
     },
-    'clearing': {
+    'Clearing': {
         'west': 'Hill',
-        'item': 'signal flare',
+        'item': 'Signal flare',
     },
+    'Jumping': {
+        'west': 'River',
+        'item': 'Nintendo',
+    }
 }
 
 current_area = 'Beach'
@@ -64,6 +85,7 @@ inventory = []
 health = 100
 hunger = 0
 thirst = 0
+workout =0
 
 show_instructions()
 
@@ -80,16 +102,17 @@ while True:
         print("Invalid command. Try again.")
         continue
 
-    command = move[]
+    command = move[0]
 
     if command == 'go' and len(move) > 1:
         direction = move[1]
         if direction in areas[current_area]:
             current_area = areas[current_area][direction]
             random_events()
-            hunger += 10
+            hunger += 15
             thirst += 10
             health -= 5
+            workout -= 5
         else:
             print("You can't go that way!")
     
@@ -98,9 +121,9 @@ while True:
         if "item" in areas[current_area] and item == areas[current_area]['item']:
             inventory.append(item)
             print(f'{item} got!')
-            del areas[surrent_area]['item']
+            del areas[current_area]['item']
         else:
-            print(f"can't get {item}!")
+            print(f"Can't get {item}!")
     
     elif command == 'look':
         print(describe_area(current_area))
@@ -108,7 +131,7 @@ while True:
     elif command == 'use' and len(move) > 1:
         item = move[1]
         if item == 'fruit':
-            print("You get the fruit and feel refreshed! Yum!")
+            print("You get the fruit and feel refreshed!")
             hunger = max(huger - 20, 0)
             inventory.remove(item)
         elif item == 'fish':
@@ -120,7 +143,7 @@ while True:
             thirst = max(thirst - 10,0 )
             health = min(health + 10, 100)
             inventory.remove(item)
-        elif item == 'flint'
+        elif item == 'flint':
             print("You use the to start a fire")
             health = min(health + 10, 100)
             inventory.remove(item)
@@ -133,4 +156,5 @@ while True:
         else:
             print(f"You don't have a {item} in your inventory.")
     
-    elif command
+    else:
+        print("Invalid command. Try again.")
