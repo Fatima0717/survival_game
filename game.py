@@ -1,5 +1,4 @@
 import random
-import time
 
 def show_instructions():
     print('---------------------------')
@@ -7,8 +6,11 @@ def show_instructions():
     print('Instructions:')
     print("1. Use 'go [direction]' to move (e.g., 'go north').")
     print("2. Use 'get [item]' to pick up an item.")
-    print("3. Type 'inventory' to see the items you\'ve collected.")
-    print('\nGood luck!')
+    print("3. Use 'look' to see a description of your current area.")
+    print("4. Use 'use [item]' to utilize an item from your inventory.")
+    print("5. Type 'inventory' to see the items you\'ve collected.")
+    print("6. If health reaches 0, or hunger/thirst hits 100, the game ends.\n")
+    print('Good luck!')
     print('---------------------------')
 
 def show_status():
@@ -17,7 +19,6 @@ def show_status():
     print(f'Health: {health}')
     print(f'Hunger: {hunger}')
     print(f'Thirst: {thirst}')
-    print(f'Exercise: {workout}')
     print(f'Inventory: {inventory}')
     if "item" in areas[current_area]:
         print(f'You see a {areas[current_area]["item"]}')
@@ -27,54 +28,55 @@ def show_status():
 
 def describe_area(area):
     descriptions = {
-        'Beach': "The beach is beautiful",
-        'Jungle': "The jungle is a mystery",
-        'Cave': "The cave is dark and blue",
-        'Hill': "The hill provides",
-        'River': "The river is flowing",
-        'Clearing': "The clearing is open",
-        'Jumping': "He is flying"
+        'Beach': "The beach is beautiful with golden sands and gentle waves.",
+        'Jungle': "The jungle is dense and full of mysterious sounds.",
+        'Cave': "The cave is dark and echoes with strange noises.",
+        'Hill': "The hill provides a breathtaking view of the surroundings.",
+        'River': "The river is flowing swiftly, glistening under the sun.",
+        'Clearing': "The clearing is open and serene, with sunlight streaming in.",
+        'Jumping': "You feel a sense of weightlessness here, as if flying."
     }
-    print(descriptions.get(area,"Unknown area"))
+    return descriptions.get(area, "Unknown area")
 
 def random_events():
-    events = [
-        "You find a hidden path.",
-        "A wild animal appears!",
-        "You stumble upon a treasure chest.",
-        "You feel a sudden drop in temperature.",
-    ]
-    print(random.choice(events))
+    if random.random() < 0.5:  # 50% chance of triggering an event
+        events = [
+            "You find a hidden path.",
+            "A wild animal appears!",
+            "You stumble upon a treasure chest.",
+            "You feel a sudden drop in temperature.",
+        ]
+        print(random.choice(events))
 
 areas = {
-    'Beach': {
+    'beach': {
         'north': 'jungle',
         'item': 'driftwood',
         'character': 'a friendly crab'
     },
-    'Jungle': {
+    'jungle': {
         'south': 'Beach',
         'east': 'Cave',
         'west': 'River',
-        'item': 'Banana'
+        'item': 'banana'
     },
-    'Cave': {
+    'cave': {
         'west': 'jungle',
         'item': 'binoculars',
     },
-    'Hill': {
+    'hill': {
         'east': 'Clearing',
-        'item': 'Golden Sword',
+        'item': 'golden sword',
     },
-    'River': {
+    'river': {
         'east': 'jungle',
-        'item': 'fish and chips',
+        'item': 'fish',
     },
-    'Clearing': {
+    'clearing': {
         'west': 'Hill',
-        'item': 'Signal flare',
+        'item': 'signal flare',
     },
-    'Jumping': {
+    'jumping': {
         'west': 'River',
         'item': 'Nintendo',
     }
@@ -85,20 +87,19 @@ inventory = []
 health = 100
 hunger = 0
 thirst = 0
-workout =0
 
 show_instructions()
 
 while True:
     show_status()
 
-    if health <=0 or hunger >= 100 or thirst >= 100:
+    if health <= 0 or hunger >= 100 or thirst >= 100:
         print("You didn't survive the island. Game over!")
         break
 
     move = input('>').lower().split()
 
-    if len(move) ==0:
+    if len(move) == 0:
         print("Invalid command. Try again.")
         continue
 
@@ -112,7 +113,6 @@ while True:
             hunger += 15
             thirst += 10
             health -= 5
-            workout -= 5
         else:
             print("You can't go that way!")
     
@@ -124,37 +124,39 @@ while True:
             del areas[current_area]['item']
         else:
             print(f"Can't get {item}!")
-    
+
     elif command == 'look':
         print(describe_area(current_area))
 
     elif command == 'use' and len(move) > 1:
         item = move[1]
-        if item == 'fruit':
-            print("You get the fruit and feel refreshed!")
-            hunger = max(huger - 20, 0)
-            inventory.remove(item)
-        elif item == 'fish':
-            print("You use the driftwood to make a fire")
-            hunger = max(hunger - 30, 0 )
-            inventory.remove(item)
-        elif item == 'driftwood':
-            print("You use the driftwood to make a fire. it feels warm and safe.")
-            thirst = max(thirst - 10,0 )
-            health = min(health + 10, 100)
-            inventory.remove(item)
-        elif item == 'flint':
-            print("You use the to start a fire")
-            health = min(health + 10, 100)
-            inventory.remove(item)
-        elif item == 'binoculars':
-            print("You use the binoculars to scan the horizon")
-        elif item == 'signal flare':
-            print("You use binoculars to scan the horizon for rescue.")
-            print("Congratulations! You survived the island!")
-            break
+        if item in inventory:
+            if item == 'banana':
+                print("You eat the banana and feel refreshed!")
+                hunger = max(hunger - 20, 0)
+                inventory.remove(item)
+            elif item == 'fish':
+                print("You cook the fish and have a hearty meal.")
+                hunger = max(hunger - 30, 0)
+                inventory.remove(item)
+            elif item == 'driftwood':
+                print("You use the driftwood to make a fire. It feels warm and safe.")
+                thirst = max(thirst - 10, 0)
+                health = min(health + 10, 100)
+                inventory.remove(item)
+            elif item == 'binoculars':
+                print("You use the binoculars to scan the horizon.")
+            elif item == 'signal flare':
+                print("You use the signal flare to attract attention.")
+                print("Congratulations! You survived the island!")
+                break
+            else:
+                print(f"Using {item} doesn't seem to do anything useful.")
         else:
             print(f"You don't have a {item} in your inventory.")
     
+    elif command == 'inventory':
+        print(f"Inventory: {inventory}")
+
     else:
         print("Invalid command. Try again.")
